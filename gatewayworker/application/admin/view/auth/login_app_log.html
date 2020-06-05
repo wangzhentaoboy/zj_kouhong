@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>熟面机后台管理系统</title>
+    <meta name="author" content="DeathGhost"/>
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/css/style.css">
+    <!--[if lt IE 9]>
+    <script src="__ROOT__/Public/js/html5.js"></script>
+    <![endif]-->
+    <script src="__ROOT__/Public/js/jquery.js"></script>
+    <script src="__ROOT__/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/layui/css/layui.css">
+    <script src="__ROOT__/Public/layui/layui.js"></script>
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/admin/add-style.css">
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/admin/css/style.css">
+    <script>
+        (function ($) {
+            $(window).load(function () {
+                $("a[rel='load-content']").click(function (e) {
+                    e.preventDefault();
+                    var url = $(this).attr("href");
+                    $.get(url, function (data) {
+                        $(".content .mCSB_container").append(data); //load new content inside .mCSB_container
+                        //scroll-to appended content
+                        $(".content").mCustomScrollbar("scrollTo", "h2:last");
+                    });
+                });
+                $(".content").delegate("a[href='top']", "click", function (e) {
+                    e.preventDefault();
+                    $(".content").mCustomScrollbar("scrollTo", $(this).attr("href"));
+                });
+            });
+            $(document).ready(function () {
+                $('#menu dd a').each(function () {
+                    var length = String(window.location).lastIndexOf('/');
+                    //console.log($($(this))[0].href.substring(0,length));
+                    // console.log(length);
+                    var url = String(window.location).substring(0, length);
+                    // console.log(url);
+                    if ($($(this))[0].href.substring(0, length) == url) {
+                        $(this).addClass("active");
+                        $(this).nextAll().removeClass('active');
+                    }
+                });
+            });
+        })(jQuery);
+    </script>
+    <style>
+        .active {
+            background-color: #06c1ae;
+        }
+    </style>
+</head>
+<body>
+<!--header-->
+<include file="Public:header"/>
+<!--aside nav-->
+<include file="Public:menu"/>
+
+<section class="rt_wrap content mCustomScrollbar">
+    <div class="rt_content new_page new_list">
+        <div class="page_title">
+            <h2 class="fl">登录日志列表</h2>
+            <section class="fr search-cnt layui-form">
+                <form method="get" class="form-x" action="">
+                   <input type="text" class="textbox bg-border-radius input-box" name="username" value="{$username}" placeholder="用户账号"/>
+                   <div class="bg-border-radius w_80">
+                        <select name="page" class="page-count">
+                            <option value="">分页</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                        </select>
+                   </div>
+                    <input type="submit" id="select" value="查询" class="gradient-btn seatch-btn"/>
+                </form>
+            </section>
+        </div>
+        
+        <div class="new-box">
+            <table class="table">
+                <tr class="lead">
+                    <th>用户昵称</th>
+                    <th>机器id</th>
+                    <th>机器名字</th>
+                    <th>登陆手机</th>
+                    <th>登录时间</th>
+                </tr>
+                <volist name="arr" id="v">
+                    <tr>
+                        <td class="center">{$v.nickname}</td>
+                        <td class="center">{$v.deviceid}</td>
+                        <td class="center">{$v.name}</td>
+                        <td class="center">{$v.login_os}</td>
+                        <td class="center">{$v.login_time|date="Y-m-d H:i:s",###}</td>
+                    </tr>
+                </volist>
+            </table>
+            <aside class="paging">
+                {$page}
+            </aside>
+        </div>
+    </div>
+</section>
+
+</body>
+<script type="text/javascript">
+    layui.use('form', function () {
+        var form = layui.form;
+        
+    });
+</script>
+</html>

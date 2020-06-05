@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>编辑权限组</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/admin/dist/themes/default/style.css" />
+  <style type="text/css">
+      * {
+        box-sizing: border-box;
+      }
+      
+      #jstree_demo_div .jstree-container-ul .jstree-node {
+        display: block;
+        clear: both;
+      }
+      
+      #jstree_demo_div .jstree-leaf:not(:first-child) {
+        float: left;
+        background: none;
+        margin-left: 0;
+        min-width: 80px;
+        clear: none;
+      }
+      
+      #jstree_demo_div .jstree-leaf {
+        float: left;
+        margin-left: 0;
+        padding-left: 24px;
+        min-width: 80px;
+        clear: none;
+        color: #777;
+      }
+      
+      #jstree_demo_div .jstree-leaf>.jstree-icon,
+      #jstree_demo_div .jstree-leaf .jstree-themeicon {
+        display: none;
+      }
+      
+      #jstree_demo_div .jstree-last {
+        background-image: url("http://wxsmj.wanjiejixie.com/Public/admin/32px.png");
+        background-position: -292px -4px;
+        background-repeat: repeat-y;
+      }
+      
+      #jstree_demo_div .jstree-children:before,
+      #jstree_demo_div .jstree-children:after {
+        content: " ";
+        display: table;
+      }
+      
+      #jstree_demo_div .jstree-children:after {
+        clear: both;
+      }
+      
+      #jstree_demo_div .jstree-themeicon {
+        display: none;
+      }
+      .row{
+        display: flex;
+        align-items: flex-start;
+        height: 45px;
+        font-size: 14px;
+        padding: 0 10px;
+      }
+      .row .left{
+        width: 100px;
+        padding-top: 10px;
+        color: #666666;
+      }
+      .row .right{
+		width: 90%;
+      }
+      .row .right input[type="text"]{
+        width: 200px;
+        height: 35px;
+        padding: 0 5px;
+        border-radius: 2px;
+        border: solid 2px #ebebeb;
+      }
+      .row .right input[type="text"]:focus{
+        border-color: #ffe200 !important;
+        outline: none;
+      }
+      .row .right .controll{
+        line-height: 35px;
+      }
+      .form-btns{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+      }
+      .form-btns button{
+        width: 100px;
+        height: 35px;
+        line-height: 35px;
+        border-radius: 18px;
+        border: none;
+        color: #666666;
+        font-size: 14px;
+        margin: 0 10px;
+        background-image: linear-gradient(90deg, #fecc07 0%, #ffe700 100%), linear-gradient( #ffe200, #ffe200);
+        background-blend-mode: normal, normal;
+        outline: none;
+      }
+      .form-btns button.btn-cancle {
+          background: #efefef;
+      }
+      .cnt{
+        height: 420px;
+        padding-bottom: 20px;
+        overflow: auto;
+      }
+    </style>
+</head>
+
+<body style="background: #fff;">      
+ <form method="post" id="form1" class="form-x" action="index.php/admin/Auth/addRole" onsubmit="return checked()">
+    <div class="cnt">
+      <div class="row">
+      <div class="left">权限组名称</div>
+      <div class="right"><input type="text" name="title" value="{$group_info.title}"></div>
+    </div>
+
+
+
+    <div class="row">
+      <div class="left">适用范围</div>
+      <div class="right">
+        <div class="controll">
+          <input type="checkbox" name="checkall" id="checkall" value="" /><label for="checkall">全选</label>
+          <input type="checkbox" name="expandall" id="expandall" value="" /><label for="expandall">展开</label>
+        </div>
+        <div id="jstree_demo_div"></div>
+        <div style="height: 10px"></div>
+      </div>
+     </div>
+    </div>
+    <input type="hidden" name="id" value="{$group_info.id}">
+    <input type="hidden" id='sub' value="1">
+    <input type="hidden" name='rules' value="">
+    <div class="form-btns">
+      <!-- <button id="Cancel" class="btn-cancle" type="button">
+        取消</button> -->
+      <button id="Save" class="btn-ok gradient-btn" type="button" onclick="checked()">
+        确定</button>
+    </div>   
+ </form>
+</body>
+<script src="http://wxsmj.wanjiejixie.com/Public/admin/jquery1.12.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://wxsmj.wanjiejixie.com/Public/admin/dist/jstree.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://wxsmj.wanjiejixie.com/Public/layer/mobile/need/layer.css"></script>
+<script src="http://wxsmj.wanjiejixie.com/Public/layer/layer.js"></script>
+<script type="text/javascript">
+	function checked(){
+		var sub = $("#sub").val();
+		if(sub==2){
+			return false;
+		}
+		var title = $("input[name='title']").val();
+		if(title==''){
+			layer.msg("请填写名称");return false;
+		}
+		var status = $("input[name='status']").val();
+		if(status==''){
+			layer.msg("请填选择状态");return false;
+		}
+		var rules1 = $("#jstree_demo_div").jstree().get_undetermined();
+		var rules2 = $("#jstree_demo_div").jstree().get_selected();	
+		if(rules1=='' && rules2==''){
+			layer.msg("请填选择该组权限");return false;
+		}
+		if(rules1==''){
+			$("input[name='rules']").val(rules2);
+		}else if(rules2==''){
+			$("input[name='rules']").val(rules1);
+		}else{
+			$("input[name='rules']").val(rules1+','+rules2);
+		}
+		$("#sub").val(2);
+		var data = $("#form1").serialize();
+		$.ajax({
+            url: "/index.php/admin/Auth/addRole",
+            type: "POST",
+            data: data,
+            success: function (res) {
+                if (res == 200) {
+                    layer.msg("操作成功",{icon: 1,time:1500}, function(){
+                    	var index = parent.layer.getFrameIndex(window.name);
+                    	parent.layer.close(index);
+                    	parent.location.href="/index.php/admin/Auth/roleList";
+                    });                    
+                } else {
+                    layer.msg("操作失败", {icon: 2});
+                    $("#sub").val(1);
+                }
+            }
+        });
+		
+	}
+    $(function() {
+      var content = {$content};
+      $('#jstree_demo_div').jstree({
+        "themes": {
+          "stripes": true
+        },
+        "checkbox": {
+          "keep_selected_style": false,
+          //"three_state": false,
+        },
+        "types": {
+          "root": {
+            "icon": "fa fa-folder-open",
+          },
+          "menu": {
+            "icon": "fa fa-folder-open",
+          },
+          "file": {
+            "icon": "fa fa-file-o",
+          }
+        },
+        "plugins": ["checkbox", "types"],
+        "core": {
+          'check_callback': true,
+          "data": content
+        }
+      });
+      $('#jstree_demo_div').on("changed.jstree", function(e, data) {
+          // console.log(data.selected);
+    	  /* var parent = data.node.parent,children = data.node.children.length,action  = data.action;
+          if(parent != '#' && children ==  0){
+            console.log('最后一级')
+            var parents = data.node.parents;
+            if(action == "select_node"){
+              for (var i = parents.length - 1; i >= 0; i--) {
+               $('#jstree_demo_div').jstree().select_node(parents[i])
+              }
+            }
+          } */
+      });
+
+      $(document).on("click", "#checkall", function() {
+        $("#jstree_demo_div").jstree($(this).prop("checked") ? "check_all" : "uncheck_all");
+      });
+      $(document).on("click", "#expandall", function() {
+        $("#jstree_demo_div").jstree($(this).prop("checked") ? "open_all" : "close_all");
+      });
+
+      $(".btn-ok").click(function(){
+        //console.log($("#jstree_demo_div").jstree().get_selected())
+        // $("#jstree_demo_div").jstree("select_node")
+        //$("#jstree_demo_div").jstree().get_undetermined();
+      })
+    });
+  </script>
+</html>

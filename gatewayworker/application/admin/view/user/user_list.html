@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <title>{$title}</title>
+    <meta name="author" content="DeathGhost"/>
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/css/style.css">
+    <!--[if lt IE 9]>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/html5.js"></script>
+    <![endif]-->
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/layui/css/layui.css">
+    <script src="http://wxsmj.wanjiejixie.com/Public/layui/layui.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/admin/add-style.css">
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/admin/css/style.css">
+</head>
+<body>
+<!--header-->
+<!--//<include file="Public:header" />-->
+{include file="public/header" /}
+<!--aside nav-->
+<!--aside nav-->
+<!--<include file="Public:menu" />-->
+{include file="public/menu" /}
+
+<section class="rt_wrap content mCustomScrollbar">
+    <div class="rt_content new_page new_list">
+        <div class="page_title">
+            <h2 class="fl">用户列表</h2>
+            <!-- <a href="__APP__/Device/device_add.html" class="fr top_rt_btn add_icon">添加评价记录</a>-->
+            <div class="fr search-cnt layui-form">
+                <form method="get" class="form-x" action="/index.php/admin/User/user_list">
+                    <input type="text" class="textbox input-box bg-border-radius w_200" name="nickname" id="nickname"
+                               placeholder="用户昵称/uid"/>
+
+                    <input type="submit" id="select" value="查询" class="gradient-btn seatch-btn "/>
+                </form>                
+            </div>
+        </div>
+        
+        <div class="new-box">
+            <table class="table">
+                <tr class="center lead">
+                    <th class="center" width="70">ID</th>
+                    <!-- <th style="width:300px;">用户openid</th>-->
+                    <th class="center">用户昵称</th>
+                    <th class="center" width="80">用户头像</th>
+
+                    <th class="center">口红币</th>
+                    <!--<th class="center">女神分红</th>-->
+                    <th class="center">口红精灵</th>
+                    <th class="center">最高等级</th>
+                    <th class="center">观看视频的总次数</th>
+                    <th class="center">最后一次上线时间</th>
+
+                    <th class="center" width="150px">注册时间</th>
+                    <th class="center">操作</th>
+                </tr>
+                {volist name="arr" id="a"}
+
+                <tr class="center">
+                    <td>{$a.id}</td>
+                    <!--  <td style="width:300px;" >{$a.openid}</td>-->
+                    <td>{$a.nickname}</td>
+                   {if condition="($a.avatar == '')"}
+                        <td style="width:100px;height:100px;">无头像</td>
+                        {else/}
+                        <td>
+                            <img src="{$a.avatar}" style="width:40px;height:40px;"/>
+                        </td>
+                   {/if}
+
+                    <td>
+                        <strong>{$a.game_coin}</strong>
+                    </td>
+                    <td>
+                        <strong>{$a.khsprite}</strong>
+                    </td>
+
+                    <td>{$a.khmaxlvl}</td>
+                    <td>{$a.viewvideotime}</td>
+
+                    <td>
+                        {if condition="$a['lastlogintime'] eq null"}
+
+
+                        {else/}
+                        {$a.lastlogintime|date='Y-m-d H:i:s',###}
+                        {/if}
+                    </td>
+                    <td>{$a.createtime|date='Y-m-d H:i:s',###}</td>
+
+                    <td>
+                        <button type="button" class="controll-btn dropdown-toggle" data-toggle="dropdown"> <img src="http://wxsmj.wanjiejixie.com/Public/admin/controll.png"> </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="__APP__/User/user_show?uid={$a.id}" title="查看">查看</a>
+                            </li>
+                            <li>
+                                <a href="__APP__/User/set_myticket?uid={$a.id}" title="发放优惠券">发放优惠券</a>
+                            </li>
+                            <li>
+                                <a href="/admin/User/cashOut_log?uid={$a.id}" title="查看">提现记录</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+               {/volist}
+            </table>
+            <aside class="paging">
+                {$arr->render()}
+            </aside>
+        </div>
+        
+    </div>
+</section>
+<script type="text/javascript">
+     $(function () {
+
+        var form;
+
+        layui.use('form', function () {
+            form = layui.form;
+        })
+    })
+    function del(o, id, s) {
+        var id = id;
+        layer.confirm('确定要删除吗?', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            // location.href = "__APP__/Common/common_delete?id=" + id;
+            $.ajax({
+                url: " Common/common_delete ",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: id
+                },
+                success: function (r) {
+                    console.log(r);
+                    if (r.code == 200) {
+                        location.href = " Common/common_list ";
+                    } else {
+                        alert(r.err);
+                    }
+                }
+            });
+        })
+    }
+</script>
+</body>
+
+</html>

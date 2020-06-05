@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <title>{$title}</title>
+    <meta name="author" content="DeathGhost"/>
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/css/style.css">
+
+    <!--[if lt IE 9]>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/html5.js"></script>
+    <![endif]-->
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/layer/mobile/need/layer.css"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/layer/layer.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/admin/add-style.css">    
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/admin/css/style.css">    
+    <script src="http://wxsmj.wanjiejixie.com/Public/layui/layui.js"></script>
+    <style>
+        .active {
+            background-color: #06c1ae;
+        }
+ 		.setRole .layui-input {
+            border-radius: 5px;
+            height: 30px;
+            text-align: center;
+        }
+        .setRole .layui-form-select{
+            width: 120px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+<!--//<include file="Public:header" />-->
+{include file="public/header" /}
+<!--aside nav-->
+<!--aside nav-->
+<!--<include file="Public:menu" />-->
+{include file="public/menu" /}
+<section class="rt_wrap content mCustomScrollbar">
+    <div class="rt_content new_page new_list">
+        <div class="page_title">
+            <h2 class="fl">管理员列表</h2>
+            <section class="fr search-cnt layui-form">
+                <form method="get" class="form-x" action="/index.php/admin/Admin/admin_list">
+
+                    <input type="text" class="textbox bg-border-radius input-box" name="nickname" id="nickname" value="{$nickname}"
+                           placeholder="用户昵称/UID/手机号"/>
+                    <input type="submit" id="select" value="查询" class="gradient-btn seatch-btn"/>
+                </form>
+                <a href="/index.php/admin/Admin/addAdmin.html" class="gradient-btn add-shop">
+                        <img src="http://wxsmj.wanjiejixie.com/Public/admin/add-info.png" class="mCS_img_loaded">&nbsp; 添加管理员</a>
+            </section>
+        </div>
+
+        <div class="new-box">
+            <table class="table">
+                <tr class="lead">
+                    <th>ID</th>
+                    <th>用户账号</th>
+                    <th>用户类型</th>
+
+                    <th>登录时间</th>
+                    <th>操作</th>
+                </tr>
+                {volist name="arr" id="a"}
+                    <tr>
+                        <td class="center">{$a.id}</td>
+                        <td class="center">{$a.username}</td>
+
+                        <td class="center setRole layui-form">
+                        	{if condition="in_array(341, $ruleArr)"}
+	                        		<select name="interest" id="{$a.id}" lay-filter="setrole" >
+	                        			{foreach name="group" item="v"}
+	                        				<option value="{$v.id}"
+			                                {if condition="$a.type eq $v['id']"}selected{/if}
+			                                >{$v.title}</option>
+	                        			{/foreach}
+		                            </select>
+                        	{else/}
+                        		{$a.type_name}
+                        	{/if}
+                        </td>
+
+
+                        <td class="center">{$a.logintime|date='Y-m-d H:i:s',###}</td>
+                        <td class="center">
+                            <button type="button" class="controll-btn dropdown-toggle" data-toggle="dropdown"> <img src="http://wxsmj.wanjiejixie.com//Public/admin/controll.png" class="mCS_img_loaded"> </button>
+                            <ul class="dropdown-menu">
+
+
+                                <if condition="in_array(241, $ruleArr)">
+                                    <li>
+                                        <a href="/index/admin/Admin/admin_change.html?id={$a.id}" title="修改密码">修改密码</a>
+                                    </li>
+                                </if>
+                                <if condition="in_array(9, $ruleArr)">
+                                    <li>
+                                        <a href="/index/admin/Admin/editAdmin.html?id={$a.id}" title="编辑" class="">编辑</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="del(this,{$a.id},9)" title="删除"
+                                           class="">删除</a>
+                                    </li>
+                                </if>
+
+                            </ul>
+
+                        </td>
+                    </tr>
+               {/volist}
+            </table>
+            <aside class="paging">
+                {$arr->render()}
+            </aside>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+    function del(o, id, s) {
+        var id = id;
+        layer.confirm('确定要删除管理员吗?', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            location.href = "/index.php/admin/Admin/delAdmin?id=" + id;
+        });
+
+    }
+    layui.use('form', function () {
+        var form = layui.form;
+        form.on('select(setrole)', function (data) {
+            // console.log(data.elem.id)
+            $.ajax({
+                url: "__APP__/admin/set_user_role",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: data.elem.id,
+                    type: data.value
+                },
+                success: function (res) {
+                    console.log(res)
+                    if (res.code == 200) {
+                        layer.msg(res.msg, {icon: 1, time: 1000}, function () {
+                            location.reload();
+                        });
+                    } else {
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }
+            });
+        });
+    });
+</script>
+</body>
+
+</html>

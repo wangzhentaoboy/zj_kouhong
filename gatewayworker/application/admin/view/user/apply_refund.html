@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <title>煮面鲜生机器人后台管理系统</title>
+    <meta name="author" content="DeathGhost"/>
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/css/style.css">
+    <link href="https://cdn.bootcss.com/layer/3.1.0/mobile/need/layer.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+    <script src="__ROOT__/Public/js/html5.js"></script>
+    <![endif]-->
+    <script src="__ROOT__/Public/js/jquery.js"></script>
+    <script src="__ROOT__/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="__ROOT__/Public/layer/layer.js"></script>
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/layui/css/layui.css">
+    <script src="__ROOT__/Public/layui/layui.js"></script>
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/admin/add-style.css"> 
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/admin/css/style.css"> 
+    <style>
+        .active {
+            background-color: #06c1ae;
+        }
+        .stateBtn {
+            background: #ffe200;
+            width: 70px;
+            height: 30px;
+            background-color: #ffe200;
+            border-radius: 16px;
+            display: inline-block;
+            line-height: 30px;
+            color: #4d4d4d;
+            cursor: pointer;
+            float: left;
+            margin: 0 5px 5px;
+        }
+
+        .returnBack {
+            background: #efefef;
+        }
+    </style>
+</head>
+
+<body>
+<!--header-->
+<include file="Public:header"/>
+<!--aside nav-->
+<include file="Public:menu"/>
+
+<section class="rt_wrap content mCustomScrollbar">
+    <div class="rt_content new_page new_list">
+        <div class="page_title">
+            <h2 class="fl">申请退款列表</h2>
+            <!-- <a href="__APP__/Device/device_add.html" class="fr top_rt_btn add_icon">添加评价记录</a>-->
+            <div class="fr search-cnt layui-form">
+                <form method="get" class="form-x" action="">
+                    <div class="w_170 bg-border-radius">
+                        <select name="deviceid" lay-verify="" lay-search>
+                          <option value="">请选择一个店铺</option>
+                        </select>
+                        <input type="hidden" name="" id="getdeviceid" value="{$deviceid}"/>
+                    </div>
+                    <if condition="($adminId === '1')">
+                        <div class="bg-border-radius w_100">
+                            <select name="uid" class="page-count">
+                                <option value="">合伙人</option>
+                                <volist name="allPartner" id="a">
+                                    <option value="{$a.id}"
+                                    <if condition="$a['id'] eq $uid"> selected</if>
+                                    >{$a.nickname}</option>
+                                </volist>
+                            </select>
+                        </div>
+                    </if>
+
+                    <input type="text" class="textbox input-box bg-border-radius w_130" name="refundnum" value="{$refundnum}"
+                           placeholder="退款编号"/> 
+                    <input type="submit" id="select" value="查询" class="gradient-btn seatch-btn half_80_w"/>
+                    <input type="button" value="一键导出" onclick="excel();" class="gradient-btn seatch-btn half_100_w"/>
+                </form>
+            </div>
+        </div>
+        <div class="new-box">
+            <table class="table">
+                <tr class="lead">
+                    <th>店铺名称</th>
+                    <th>流水号</th>
+                    <th>菜品</th>
+                    <th>用户昵称</th>
+                    <!--<th>退款编号</th>-->
+                    <th>订单编号</th>
+                    <th>金额</th>
+                    <th>支付方式</th>
+                    <th>申请退款原因</th>
+                    <th width="150px">申请退款时间</th>
+                    <th width="180px">操作/退款状态</th>
+                </tr>
+                <volist name="arr" id="a">
+                    <tr>
+                        <td class="center">{$a.name}</td>
+                        <td class="center">{$a.serialno}</td>
+                        <td class="center">
+                            <volist name="a['goodsinfo']" id="v">
+                                {$v.name}&nbsp;x&nbsp;{$v.num}<br/>
+                            </volist>
+                        </td>
+
+                        <td class="center">{$a.nickname}</td>
+                        <!--<td class="center">{$a.refundnum}</td>-->
+                        <td class="center">{$a.orderid}</td>
+                        <td class="center">
+                            <strong class="rmb_icon">{$a.refund_fee}</strong>
+                        </td>
+                        <if condition="$a.pay_type eq 1">
+                            <td class="center">余额支付</td>
+                            <elseif condition="$a.pay_type eq 0"/>
+                            <td class="center">微信支付</td>
+                            <else/>
+                            <td class="center">支付宝支付</td>
+                        </if>
+
+                        <td class="center">{$a.content}</td>
+                        <td class="center">{$a.time|date="Y-m-d H:i:s",###}</td>
+                        <td class="center">
+                            <if condition="$a.rstate eq 1">
+                                <p class="center">已退款</p>
+                                <elseif condition="$a.rstate eq 0"/>
+                                <p class="center">拒绝退款</p>
+                                <else/>
+                                <span title="同意退款" onclick="sub('{$a.orderid}',{$a.rid},1);" class="stateBtn cursor">同意</span>
+                                <span title="拒绝退款" onclick="sub('{$a.orderid}',{$a.rid},2);"
+                                      class="stateBtn returnBack cursor">拒绝</span>
+                            </if>
+                        </td>
+                    </tr>
+                </volist>
+            </table>
+            <aside class="paging">
+                {$page}
+            </aside>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+    function excel() {
+        var deviceid = $("select[name='deviceid']").val();
+        var uid = $("select[name='uid']").val();
+        var nickname = $("input[name='nickname']").val();
+        var refundnum = $("input[name='refundnum']").val();
+        window.location.href = "{:U('User/apply_refund_excel')}?deviceid=" + deviceid + "&uid=" + uid + "&nickname=" + nickname + "&refundnum=" + refundnum;
+    }
+    function sub(orderid, id, num) {
+        layer.confirm('确定执行操作？', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            $.ajax({
+                url: "{:U('User/refund_cz')}",
+                type: "POST",
+                data: {id: id, num: num, orderid: orderid},
+                success: function (res) {
+                    console.log(res);
+                    if (res == 1) {
+                        layer.msg('操作成功', {icon: 1});
+                        location.href = "{:U('user/apply_refund')}";
+                    } else {
+                        layer.msg('操作失败', {icon: 3});
+                    }
+                }
+            });
+        })
+    }
+</script>
+<script type="text/javascript">
+    $(function () {
+
+        var form,data='',getdeviceid = $("#getdeviceid").val();
+
+        layui.use('form', function () {
+            form = layui.form;
+
+            $.ajax({
+                url: "{:U('api/api_device_list_ifshow')}",
+                success: function (res) {
+                    var arr = JSON.parse(res);
+                    // console.log(arr)
+                    for (var i = 0; i < arr.length; i++) {
+                        if(getdeviceid == arr[i].deviceid){
+                          data += '<option value="'+ arr[i].deviceid +'" selected>'+ arr[i].name +'</option>'  
+                        }else{
+                          data += '<option value="'+ arr[i].deviceid +'">'+ arr[i].name +'</option>'
+                        }
+                    } 
+                    $("select[name='deviceid']").append(data);
+
+                    form.render('select')
+                }
+            })
+        })
+    })
+
+
+
+</script>
+</body>
+
+</html>

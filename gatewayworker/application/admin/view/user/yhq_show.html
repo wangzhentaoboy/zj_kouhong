@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>煮面鲜生机器人后台管理系统</title>
+    <meta name="author" content="DeathGhost" />
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/css/style.css">
+    <!--[if lt IE 9]>
+    <script src="__ROOT__/Public/js/html5.js"></script>
+    <![endif]-->
+    <script src="__ROOT__/Public/js/jquery.js"></script>
+    <script src="__ROOT__/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+     <link rel="stylesheet" type="text/css" href="__ROOT__/Public/admin/add-style.css"> 
+</head>
+
+<body>
+    <!--header-->
+    <include file="Public:header" />
+    <!--aside nav-->
+    <!--aside nav-->
+    <include file="Public:menu" />
+    <section class="rt_wrap content mCustomScrollbar">
+        <div class="rt_content new_page new_list">
+            <div class="page_title">
+                <h2 class="fl">用户详情</h2>
+                <ul id="myTab" class="fl user_lead">
+                 <li>
+                    <a href="{:U('user/user_show',array('type'=>'user','uid'=>$uid))}" >基本信息</a>
+                </li>
+                <li>
+                    <a href="{:U('user/user_show',array('type'=>'order','uid'=>$uid))}" >订单</a>
+                </li>
+                <li class="active">
+                    <a href="{:U('user/user_show',array('type'=>'yhq','uid'=>$uid))}" >优惠券</a>
+                </li>
+                <li>
+                    <a href="{:U('user/user_show',array('type'=>'invite','uid'=>$uid))}">邀请新用户</a>
+                </li>
+            </ul>
+            </div>
+            
+            <div id="myTabContent" class="tab-content new-box">   
+                <div class="tab-pane fade in active" id="coupon">
+                    <table class="table">
+                        <tbody>
+                            <tr class="lead">
+                                <th style="width:150px;">优惠策略</th>
+                                <th>优惠券名称</th>
+                                <th>有效期</th>
+                                <th>状态</th>
+                                <th>创建时间</th>
+                                <!-- <th>操作</th> -->
+                            </tr>
+                            <volist name="arr" id='v'>
+	                            <tr>
+	                                <td class="">
+	                                	满 <span style="color:#fa6115;">{$v.condition}</span> 减  <span style="color:#fa6115;">{$v.price}</span> 元
+	                                </td>
+	                                <td class=" beyond">{$v.name}</td>
+	                                <td class="">
+	                                	{$v.starttime|date='Y-m-d',###}至{$v.endtime|date='Y-m-d',###}
+	                                </td>
+	                                <td class="">
+	                                	<if condition="$v.state eq 1">
+		                            		已使用
+		                            	<else/>
+		                            		<if condition="$v.endtime lt $time">
+			                            		<span>已过期</span>
+			                            	<else/>
+			                            		<span style="color:#fa6115;">未使用</span>
+			                            	</if>		                            		
+		                            	</if>	                                		                                	
+	                                </td>
+	                                <td class="">{$v.addtime|date='Y-m-d',###}</td>
+	                                <!-- <td class="">
+	                                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+	                                        	操作
+	                                        <span class="caret"></span>
+	                                    </button>
+	                                    <ul class="dropdown-menu">
+	                                        <li>
+	                                            <a href="{:U('order/order_detail',array('orderid'=>$v['orderid']))}" title="详情" class="">详情</a>
+	                                        </li>
+	                                    </ul>
+	                                </td> -->
+	                            </tr>
+	                        </volist>
+                        </tbody>
+                    </table>
+                    <aside class="paging">
+			            {$page}
+			        </aside>
+                </div> 
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

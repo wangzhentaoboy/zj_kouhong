@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <title>{$title}</title>
+    <meta name="author" content="DeathGhost"/>
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/css/style.css">
+    <!--[if lt IE 9]>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/html5.js"></script>
+    <![endif]-->
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/layui/css/layui.css">
+    <script src="http://wxsmj.wanjiejixie.com/Public/layui/layui.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/admin/add-style.css">
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/admin/css/style.css">
+</head>
+<body>
+<!--header-->
+<!--//<include file="Public:header" />-->
+{include file="public/header" /}
+<!--aside nav-->
+<!--aside nav-->
+<!--<include file="Public:menu" />-->
+{include file="public/menu" /}
+
+<section class="rt_wrap content mCustomScrollbar">
+    <div class="rt_content new_page new_list">
+        <div class="page_title">
+            <h2 class="fl">提现记录</h2>
+            <!-- <a href="__APP__/Device/device_add.html" class="fr top_rt_btn add_icon">添加评价记录</a>-->
+
+        </div>
+        
+        <div class="new-box">
+            <table class="table">
+                <tr class="center lead">
+                    <th class="center" width="70">ID</th>
+                    <!-- <th style="width:300px;">用户openid</th>-->
+                    <th class="center">类型</th>
+                    <th class="center" width="80">金额</th>
+                    <th class="center">时间</th>
+
+                </tr>
+                {volist name="logList" id="log"}
+                <tr class="center">
+                    <td>{$log.id}</td>
+                    <td>{$log.type>1?"分红":"口红币"}</td>
+                    <td>
+                        <strong>{$log.money}</strong>
+                    </td>
+                    <td>
+                        <strong>{$log.datetime|date='Y-m-d H:i',###}</strong>
+                    </td>
+                </tr>
+               {/volist}
+            </table>
+            <aside class="paging">
+                {$logList->render()}
+            </aside>
+        </div>
+        
+    </div>
+</section>
+</body>
+
+</html>

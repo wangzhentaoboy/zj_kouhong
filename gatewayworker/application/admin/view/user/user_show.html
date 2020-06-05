@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>煮面鲜生机器人后台管理系统</title>
+    <meta name="author" content="DeathGhost" />
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/css/style.css">
+    <!--[if lt IE 9]>
+    <script src="__ROOT__/Public/js/html5.js"></script>
+    <![endif]-->
+    <script src="__ROOT__/Public/js/jquery.js"></script>
+    <script src="__ROOT__/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/admin/add-style.css"> 
+    
+</head>
+
+<body>
+    <!--header-->
+    <include file="Public:header" />
+    <!--aside nav-->
+    <!--aside nav-->
+    <include file="Public:menu" />
+    <section class="rt_wrap content mCustomScrollbar">
+        <div class="rt_content new_page new_list">
+            <div class="page_title">
+                <h2 class="fl">用户详情</h2>
+                <ul id="myTab" class="fl user_lead">
+                    <li class="active">
+                        <a href="{:U('user/user_show',array('type'=>'user','uid'=>$uid))}" >基本信息</a>
+                    </li>
+                    <li>
+                        <a href="{:U('user/user_show',array('type'=>'order','uid'=>$uid))}" >订单</a>
+                    </li>
+                    <li>
+                        <a href="{:U('user/user_show',array('type'=>'yhq','uid'=>$uid))}" >优惠券</a>
+                    </li>
+                    <li>
+                        <a href="{:U('user/user_show',array('type'=>'invite','uid'=>$uid))}">邀请新用户</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div id="myTabContent" class="tab-content new-box user-box">
+                <div class="tab-pane fade in active" id="home">
+                    <div class="user-box-lead">
+                        基本信息
+                    </div>
+                    <!-- <form> -->
+                        <div class="form-group row img-icon">
+                            <label class="row-bd text-right text-secondary">头像</label>
+                            <div class="row-hd pt-1">
+                                <if condition="$user.headimgurl neq ''">
+                                    <img src="{$user.headimgurl}" width="88px">
+                                <else/>
+                                    暂无头像
+                                </if>                                
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label class="row-bd text-right text-secondary">昵称</label>
+                            <div class="row-hd">{$user.nickname}</div>
+                        </div>
+                        <div class="form-group row ">
+                            <label class="row-bd text-right text-secondary">ID</label>
+                            <div class="row-hd">{$user.id}</div>
+                        </div>
+                        <div class="form-group row ">
+                            <label class="row-bd text-right text-secondary">公众号标识</label>
+                            <div class="row-hd">
+                            	<if condition="$user.openid neq ''">
+                            		{$user.openid}
+                            	<else/>
+                            		暂无绑定
+                            	</if>
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label class="row-bd text-right text-secondary">小程序标识</label>
+                            <div class="row-hd">
+                            	<if condition="$user.sopenid neq ''">
+                            		{$user.sopenid}
+                            	<else/>
+                            		暂无绑定
+                            	</if>
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label class="row-bd text-right text-secondary">绑定手机号</label>
+                            <div class="row-hd">
+                            	<if condition="$user.phone neq ''">
+                            		{$user.phone}
+                            	<else/>
+                            		暂无绑定
+                            	</if>
+                            </div>
+                        </div> 
+                        <div class="form-group row ">
+                            <label class="row-bd text-right text-secondary">账户余额</label>
+                            <div class="row-hd">{$user.count}</div>
+                        </div>
+                        <div class="form-group row ">
+                            <label class="row-bd text-right text-secondary">用户类型</label>
+                            <div class="row-hd">
+                            	<if condition="$user.role eq 1">
+                            		测试人员
+                            	<elseif condition="$user.role eq 18"/>
+                            		管理员
+                            	<elseif condition="$user.role eq 21"/>
+                            		城市合伙人
+                            	<elseif condition="$user.role eq 26"/>
+                            		运维人员
+                            	<elseif condition="$user.role eq 27"/>
+                            		促销人员
+                            	<elseif condition="$user.role eq 6"/>
+                            		超级管理员
+                            	<elseif condition="$user.role eq 7"/>
+                            		总管理员
+                            	<else/>
+                            		普通用户
+                            	</if>
+                            </div>
+                        </div> 
+                        <div class="form-group row ">
+                            <label class="row-bd text-right text-secondary">注册时间</label>
+                            <div class="row-hd">{$user.entertime}</div>
+                        </div>
+                    <!-- </form> -->
+                </div>
+            </div>
+        </div>
+    </section>
+  <!--   <script type="text/javascript">
+        $(document).ready(function () {
+            if (location.hash) {
+                $('a[href=' + location.hash + ']').tab('show');
+            }
+            $(document.body).on("click", "a[data-toggle]", function (event) {
+                location.hash = this.getAttribute("href");
+            });
+        });
+        $(window).on('popstate', function () {
+            var anchor = location.hash || $("a[data-toggle=tab]").first().attr("href");
+            $('a[href=' + anchor + ']').tab('show');
+        });
+    </script> -->
+</body>
+
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>熟面机后台管理系统</title>
+  <meta name="author" content="DeathGhost" />
+  <link rel="stylesheet" type="text/css" href="__ROOT__/Public/css/style.css">
+  <!--[if lt IE 9]>
+  <script src="__ROOT__/Public/js/html5.js"></script>
+  <![endif]-->
+  <script src="__ROOT__/Public/js/jquery.js"></script>
+  <script src="__ROOT__/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+  <script>
+    (function($){
+      $(window).load(function(){
+        $("a[rel='load-content']").click(function(e){
+          e.preventDefault();
+          var url=$(this).attr("href");
+          $.get(url,function(data){
+            $(".content .mCSB_container").append(data); //load new content inside .mCSB_container
+            //scroll-to appended content
+            $(".content").mCustomScrollbar("scrollTo","h2:last");
+          });
+        });
+        $(".content").delegate("a[href='top']","click",function(e){
+          e.preventDefault();
+          $(".content").mCustomScrollbar("scrollTo",$(this).attr("href"));
+        });
+      });
+      $(document).ready(function() {
+        $('#menu dd a').each(function() {
+          var length = String(window.location).lastIndexOf('/');
+          //console.log($($(this))[0].href.substring(0,length));
+          // console.log(length);
+          var url = String(window.location).substring(0,length);
+          // console.log(url);
+          if ($($(this))[0].href.substring(0,length) == url) {
+            $(this).addClass("active");
+            $(this).nextAll().removeClass('active');
+          }
+        });
+      });
+    })(jQuery);
+  </script>
+  <style>
+    .active{background-color:#06c1ae;}
+  </style>
+</head>
+<body>
+<!--header-->
+<include file="Public:header"/>
+<!--aside nav-->
+<include file="Public:menu"/>
+
+<section class="rt_wrap content mCustomScrollbar">
+  <div class="rt_content">
+    <div class="page_title">
+      <h2 class="fl">登录日志列表</h2>
+      <!-- <a href="__APP__/Device/device_add.html" class="fr top_rt_btn add_icon">添加评价记录</a>-->
+    </div>
+    <form method="post" class="form-x" action="">
+      <section class="mtb">
+        <input type="text" class="textbox textbox_225" name="uid" value="{$uid}" placeholder="用户UID"/>
+        <input type="text" class="textbox textbox_225" name="username" value="{$username}" placeholder="用户账号"/>
+        <input type="text" class="textbox textbox_225" name="login_ip" value="{$login_ip}" placeholder="登录IP"/>
+        <input type="text" class="textbox textbox_225" name="login_location" value="{$login_location}" placeholder="登录地点"/>
+        <select name="page" class="select">
+          <option value="0">分页数量</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+        </select>
+        <input type="submit" id="select" value="查询" class="group_btn"/>
+      </section>
+    </form>
+    <table class="table">
+      <tr>
+        <th>用户ID</th>
+    	<th>用户账号</th>
+        <th>登录IP</th>
+        <th>登录地点</th>
+        <th>浏览器</th>                                            
+        <th>操作系统</th>
+        <th>登录时间</th>
+      </tr>
+      <volist name="arr" id="v">
+        <tr>
+          <td class="center">{$v.uid}</td>
+          <td class="center">{$v.username}
+          	<if condition="$v.type eq 1"><span style="color:red;">（超级管理员）</span>
+          	<elseif condition="$v.type eq 18"/><span style="color:red;">（管理员）</span>
+          	<elseif condition="$v.type eq 21"/><span style="color:red;">（合伙人）</span>
+          	<elseif condition="$v.type eq 26"/><span style="color:red;">（运维人员）</span>
+          	<elseif condition="$v.type eq 27"/><span style="color:red;">（促销人员）</span>
+          	</if>
+          	</td>
+          <td class="center">{$v.login_ip}</td>
+          <td class="center">{$v.login_location}</td>
+          <td class="center">{$v.login_browser}</td>
+          <td class="center">{$v.login_os}</td>
+          <td class="center">{$v.login_time|date="Y-m-d H:i:s",###}</td>         
+        </tr>
+      </volist>
+    </table>
+    <aside class="paging">
+      {$page}
+    </aside>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>煮面鲜生机器人后台管理系统</title>
+    <meta name="author" content="DeathGhost" />
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/css/style.css">
+    <!--[if lt IE 9]>
+    <script src="__ROOT__/Public/js/html5.js"></script>
+    <![endif]-->
+    <script src="__ROOT__/Public/js/jquery.js"></script>
+    <script src="__ROOT__/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/admin/add-style.css"> 
+    <style>
+        .tab-content {
+            padding: 20px 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!--header-->
+    <include file="Public:header" />
+    <!--aside nav-->
+    <!--aside nav-->
+    <include file="Public:menu" />
+    <section class="rt_wrap content mCustomScrollbar">
+        <div class="rt_content new_page new_list">
+            <div class="page_title">
+                <h2 class="fl">用户详情</h2>
+                <ul id="myTab" class="fl user_lead">
+                     <li>
+                        <a href="{:U('user/user_show',array('type'=>'user','uid'=>$uid))}" >基本信息</a>
+                    </li>
+                    <li class="active">
+                        <a href="{:U('user/user_show',array('type'=>'order','uid'=>$uid))}" >订单</a>
+                    </li>
+                    <li>
+                        <a href="{:U('user/user_show',array('type'=>'yhq','uid'=>$uid))}" >优惠券</a>
+                    </li>
+                    <li>
+                        <a href="{:U('user/user_show',array('type'=>'invite','uid'=>$uid))}">邀请新用户</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div id="myTabContent" class="new-box">               
+                <div class="tab-pane fade in active" id="ios">
+                    <table class="table">
+                        <tbody>
+                            <tr class="lead">
+                                <th>订单编号</th>
+                                <th>店铺名称</th>
+                                <th>菜品</th>
+                                <th>数量</th>
+                                <th>订单金额</th>
+                                <th>实付金额</th>
+                                <th>优惠券名称</th>
+                                <th>下单时间</th>
+                                <th>付款时间</th>
+                                <!-- <th>退款时间</th> -->
+                                <th>付款方式</th>
+                                <th>状态</th>
+                            </tr>
+                            <volist name="order_list" id='v'>
+	                            <tr>
+	                                <td style="word-break: break-all;"><if condition="$v.is_hm eq 3">
+                                                    <img src="__ROOT__/Public/admin/tuan.png">
+                                                </if>&nbsp;{$v.orderid}</td>
+	                                <td class="">{$v.name}</td>
+	                                <td class="">
+				                        <volist name="v['goods']" id="vv">
+				                            {$vv.name}<br/>
+				                        </volist>
+				                    </td>
+                                    <td>
+                                        <volist name="v['goods']" id="vv">
+                                            {$vv.num}<br/>
+                                        </volist>
+                                    </td>
+	                                <td class=""><strong class="rmb_icon">{$v.totalamount}</strong></td>
+                    				<td class=""><strong class="rmb_icon">{$v.paymoney}</strong></td>
+                    				<td class="">{$v.aname}</td>
+                    				<td class="">{$v.ordertime|date='m-d H:i:s',###}</td>
+                    				<td class="">{$v.paytime|date='m-d H:i:s',###}</td>
+                    				<!-- <td class="">{$v.refund_time|date='m-d H:i:s',###}</td> -->
+                    				<td class="">
+				                        <if condition="$v.yu eq 0 && $v.paytype eq 0">
+				                            	微信
+				                            <elseif condition="$v.yu eq 0 && $v.paytype eq 1"/>
+				                            	支付宝
+				                            <else/>
+				                            <if condition="$v.yu neq 0 && $v.paytype eq 0 && $v.role neq 0">
+				                                <span style="color:red;">余额(测试)</span>
+				                                <else/>
+				                               	 余额
+				                            </if>
+				                        </if>
+				                    </td>
+	                                <td class="">
+	                                	<if condition="$v.state eq 2">
+				                            <if condition="$v.maketime gt 0  && $v.if_make eq 1">
+				                                	付款已消费
+				                            </if>
+				                            <if condition="$v.maketime eq 0  && $v.if_make eq 0">
+				                                	排队中
+				                            </if>
+				                            <if condition="$v.maketime gt 0  && $v.if_make eq 0">
+				                                	制作中
+				                            </if>
+				                        <elseif condition="$v.state eq 3"/>
+				                           		 已退款
+				                        <elseif condition="$v.state eq 4"/>
+				                            	退款审核中
+				                        </if>
+	                                </td>
+	                            </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                    <aside class="paging">
+			            {$page}
+			        </aside>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

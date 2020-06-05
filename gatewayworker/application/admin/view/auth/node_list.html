@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <title>煮面鲜生机器人后台管理系统</title>
+    <meta name="author" content="DeathGhost"/>
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/css/style.css">
+
+    <!--[if lt IE 9]>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/html5.js"></script>
+    <![endif]-->
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/layer/mobile/need/layer.css"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/layer/layer.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/admin/add-style.css">
+    <style>
+        .active {
+            background-color: #06c1ae;
+        }
+    </style>
+</head>
+
+<body>
+<!--header-->
+{include file="public/header" /}
+<!--aside nav-->
+<!--aside nav-->
+<!--<include file="Public:menu" />-->
+{include file="public/menu" /}
+<section class="rt_wrap content mCustomScrollbar">
+    <div class="rt_content new_page new_list">
+        <div class="page_title">
+            <h2 class="fl">菜单规则列表</h2>
+            <section class="mtb fr search-cnt">               
+                <a href="/index.php/admin/auth/add_node.html" class="gradient-btn add-shop">
+                        <img src="http://wxsmj.wanjiejixie.com/Public/admin/add-info.png" class="mCS_img_loaded">&nbsp; 添加菜单</a>
+            </section>
+        </div>
+
+        <div class="new-box">
+            <table class="table">
+                <tr class="lead">
+                    <th>ID</th>
+                    <th>标题</th>
+                    <th>规则</th>
+                    <th>排序</th>
+                    <th>查看下级菜单</th>
+                    <th>操作</th>
+                </tr>
+                {volist name="arr" id="a"}
+                    <tr>
+                        <td class="center">{$a.id}</td>
+                        <td class="center" style="color:#ff6f2f;">{$a.title}</td>
+                        <td class="center">{$a.name}</td>
+                        <td class="center">{$a.sort}</td>
+                        <td class="center" id="action">
+                        	<a href="javascript:action1({$a.id});" id='a1_{$a.id}' style="color:#ff6f2f;">查看</a>
+                        	<a href="javascript:action2({$a.id});" id='a2_{$a.id}' style="display:none;color:#333;">隐藏</a>
+                        </td>
+                        <td class="center">
+                            <button type="button" class="controll-btn dropdown-toggle" data-toggle="dropdown"> <img src="http://wxsmj.wanjiejixie.com/Public/admin/controll.png" class="mCS_img_loaded"> </button>
+                            <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="/index.php/admin/Auth/add_node.html?id={$a.id}" title="编辑" class="">编辑</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="del({$a.id},1)" title="删除"
+                                           class="">删除</a>
+                                    </li>
+                            </ul>
+
+                        </td>
+                    </tr>
+                    {volist name="arr2" id="v"}
+                      {if condition="$a['id'] eq $v['pid']"}
+	                    <tr style="display:none;" class="one_{$a.id} two">
+	                        <td class="center">|--{$v.id}</td>
+	                        <td class="center" style="color:#60b418;">{$v.title}</td>
+	                        <td class="center">{$v.name}</td>
+	                        <td class="center">{$v.sort}</td>
+	                        <td class="center">
+	                        	<a href="javascript:action11({$v.id});" id='a11_{$v.id}' class="a11_{$a.id}" style="color: #60b418">查看</a>
+                        		<a href="javascript:action22({$v.id});" id='a22_{$v.id}' class="a22_{$a.id}" style="display:none;color: #333">隐藏</a>
+	                        </td>
+	                        <td class="center">
+	                            <button type="button" class="controll-btn dropdown-toggle" data-toggle="dropdown"> <img src="http://wxsmj.wanjiejixie.com/Public/admin/controll.png" class="mCS_img_loaded"> </button>
+	                            <ul class="dropdown-menu">
+	                                    <li>
+	                                        <a href="/index/admin/Auth/add_node.html?id={$v.id}" title="编辑" class="">编辑</a>
+	                                    </li>
+	                                    <li>
+	                                        <a href="javascript:void(0)" onclick="del({$v.id},2)" title="删除"
+	                                           class="">删除</a>
+	                                    </li>
+	                            </ul>
+	                        </td>
+	                    </tr>
+		                    {volist name="arr3" id="vv"}
+		                      {if condition="$v['id'] eq $vv['pid']"}
+			                    <tr style="display:none;" class="one1_{$v.id} one1_{$a.id} two1">
+			                        <td class="center">&nbsp;&nbsp;||--{$vv.id}</td>
+			                        <td class="center">{$vv.title}</td>
+			                        <td class="center">{$vv.name}</td>
+			                        <td class="center">{$vv.sort}</td>
+			                        <td class="center">
+			                        </td>
+			                        <td class="center">
+			                            <button type="button" class="controll-btn dropdown-toggle" data-toggle="dropdown"> <img src="http://wxsmj.wanjiejixie.com/Public/admin/controll.png" class="mCS_img_loaded"> </button>
+			                            <ul class="dropdown-menu">
+			                                    <li>
+			                                        <a href="/index.php/admin/Auth/add_node.html?id={$vv.id}" title="编辑" class="">编辑</a>
+			                                    </li>
+			                                    <li>
+			                                        <a href="javascript:void(0)" onclick="del({$vv.id},3)" title="删除"
+			                                           class="">删除</a>
+			                                    </li>
+			                            </ul>
+			                        </td>
+			                    </tr>
+			                  {/if}
+			                {/volist}
+	                  {/if}
+	                {/volist}
+                {/volist}
+            </table>
+            <aside class="paging">
+
+            </aside>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+	function action1(id){
+		$("#a1_"+id).hide();
+		$("#a2_"+id).show();
+		$(".one_"+id).show();
+	}
+	function action2(id,aid){
+		$("#a2_"+id).hide();
+		$("#a1_"+id).show();
+		$(".one_"+id).hide();
+		$(".one1_"+id).hide();
+		$(".a22_"+id).hide();
+		$(".a11_"+id).show();
+	}
+	function action11(id){
+		$("#a11_"+id).hide();
+		$("#a22_"+id).show();
+		$(".one1_"+id).show();
+	}
+	function action22(id){
+		$("#a22_"+id).hide();
+		$("#a11_"+id).show();
+		$(".one1_"+id).hide();
+	}
+    function del(id, type) {
+        var id = id;
+        var msg = "确定要删除菜单吗？"; 
+        if(type!=3){
+        	var msg = "确定要删除菜单吗？请保证给菜单下已没有子菜单。";
+        }
+        layer.confirm(msg, {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            location.href = "/index.php/admin/auth/del_node?id=" + id+"&type="+type;
+        });
+
+    }
+</script>
+</body>
+
+</html>

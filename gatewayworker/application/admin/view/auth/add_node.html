@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>{$title}</title>
+  <meta name="author" content="DeathGhost" />
+  <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/css/style.css">
+  <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/skins/icheck.css">
+  <link href="http://wxsmj.wanjiejixie.com/Public/layer/mobile/need/layer.css" rel="stylesheet">
+
+
+  <!--[if lt IE 9]>
+  <script src="http://wxsmj.wanjiejixie.com/Public/js/html5.js"></script>
+  <![endif]-->
+  <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.js"></script>
+  <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+  <script src="http://wxsmj.wanjiejixie.com/Public/My97DatePicker/WdatePicker.js"></script>
+  <!-- <script src="__ROOT__/Public/My97DatePicker/skin/WdatePicker.js"></script> -->
+  <script src="http://wxsmj.wanjiejixie.com/Public/js/icheck.js"></script>
+  <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.verify.js"></script>
+  <script src="http://wxsmj.wanjiejixie.com/Public/layer/layer.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/admin/add-style.css">
+</head>
+
+<body>
+  <!--header-->
+  {include file="public/header" /}
+  <!--aside nav-->
+  <!--aside nav-->
+  <!--<include file="Public:menu" />-->
+  {include file="public/menu" /}
+
+
+  <section class="rt_wrap content mCustomScrollbar">
+    <div class="rt_content new_page new_add_edit" id="verifyCheck">
+      <div class="page_title">
+        <h2 class="fl">添加/编辑菜单</h2>
+        <a href="index.php/admin/auth/node_list.html" class="fr gradient-btn back-list"> <img src="http://wxsmj.wanjiejixie.com/Public/admin/return-list.png" class="mCS_img_loaded">&nbsp;返回列表</a>
+      </div>
+      <section class="new-box">
+        <form method="post" class="form-x" action="" onsubmit="return checked()">
+            <ul class="ulColumn2 row1">
+              <li id="status">
+                <span class="item_name" style="width:120px;">父级:</span>
+                <select class="textbox" name="pid">
+                  <option value='0'>请选择</option>
+                  {foreach name="arr" item="v"}
+                    <option value="{$v.id}" {if condition="$info['pid'] eq $v['id']"}selected {/if}>{$v.title}</option>
+                    {foreach name="v['level_arr']" item="vv"}
+                    	<option value="{$vv.id}" {if condition="$info['pid'] eq $vv['id']"}selected {/if}>&nbsp;&nbsp;|--{$vv.title}</option>
+                    {/foreach}
+                  {/foreach}
+                </select>                
+              </li>
+              <li>
+                <span class="item_name" style="width:120px;">标题：</span>
+                <input type="text" class="textbox textbox_225 required check-user" value="{$info.title}" data-valid="isNonEmpty" name="title" data-error="不能为空" placeholder="标题" />  
+                <label class="focus valid "></label>
+              </li>
+              <li>
+                <span class="item_name" style="width:120px;">规则：</span>
+                <input type="text" class="textbox textbox_225 required" name="name"  placeholder="规则" value="{$info.name}"/>
+                <label class="focus valid "></label>
+              </li>
+              <li>
+                <span class="item_name" style="width:120px;">排序：</span>
+                <input type="text" class="textbox textbox_225 required" data-valid="isNonEmpty" name="sort" data-error="不能为空" placeholder="排序"
+                 value="{$info.sort}" />
+                <label class="focus valid "></label>
+              </li>
+              
+              <li>
+                <span class="item_name" style="width:120px;"></span>
+                <input type="hidden" name="id" value="{$id}" />
+                <input type="hidden" id="sub" value="1" />
+                <input id="submit" type="submit" class="gradient-btn submitBtn" value="提交" />
+              </li>
+            </ul>
+        </form>
+      </section>
+    </div>
+  </section>
+  <script>
+
+    function checked() {
+      var sub = $("#sub").val();
+      if(sub == 2){return false;}
+      var title = $("input[name='title']").val();
+      if(title==''){
+    	  layer.msg('标题不能为空');return false;
+      }
+      var sort = $("input[name='sort']").val();
+      if(sort==''){
+    	  layer.msg('请填写排序内容');return false;
+      }
+      $("#sub").val(2);
+    }
+
+    $(document).ready(function () {
+      //复选框样式
+      $('input').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+        increaseArea: '20%' // optional
+      });
+      
+    })
+  </script>
+</body>
+
+</html>

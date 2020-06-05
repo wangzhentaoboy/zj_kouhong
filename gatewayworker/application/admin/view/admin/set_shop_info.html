@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>{$title}</title>
+  <meta name="author" content="DeathGhost" />
+  <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/css/style.css">
+  <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/skins/icheck.css">
+  <link href="http://wxsmj.wanjiejixie.com/Public/layer/mobile/need/layer.css" rel="stylesheet">
+  <!--[if lt IE 9]>
+  <script src="http://wxsmj.wanjiejixie.com/Public/js/html5.js"></script>
+  <![endif]-->
+  <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.js"></script>
+  <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+  <script src="http://wxsmj.wanjiejixie.com/Public/My97DatePicker/WdatePicker.js"></script>
+  <!-- <script src="http://wxsmj.wanjiejixie.com/Public/My97DatePicker/skin/WdatePicker.js"></script> -->
+  <!-- <script src="http://wxsmj.wanjiejixie.com/Public/js/icheck.js"></script> -->
+  <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.verify.js"></script>
+  <script src="http://wxsmj.wanjiejixie.com/Public/layer/layer.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/layui/css/layui.css">
+  <script type="text/javascript" src="http://wxsmj.wanjiejixie.com/Public/layui/layui.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/admin/add-style.css">
+</head>
+
+<body>
+  <!--header-->
+  <include file="Public:header" />
+  <!--aside nav-->
+  <!--aside nav-->
+  <include file="Public:menu" />
+	<style type="text/css">		
+		.form-x ul{float: left;width: 50%;}
+		.form-x ul .txt-lead{font-size: 18px; color: #000000;  font-weight: bold;margin-bottom: 20px; width: 300px;}
+		.form-x ul .txt-lead img{margin-right: 10px;}
+		.new_add_edit .submitBtn{margin: 0 auto;}
+		.file-input{cursor: pointer;}
+		textarea{outline: none;min-height: 50px;}
+		textarea.textbox{min-height: 50px !important;}
+    .layui-form-switch{
+      float: right;height: 30px;line-height: 30px;width: 80px;margin-top: 5px;
+    }
+    .layui-form-onswitch{
+      background: #ffe200;border-color: #ffe200;
+    }
+    .layui-form-switch i{
+      width: 20px;height: 20px;top: 4px;
+    }
+    .layui-form-onswitch i {
+      margin-left: -25px;
+    }
+    .layui-form-switch em{
+      margin-left: 30px;font-size: 14px;top: -2px;
+    }
+    .layui-form-onswitch em{
+      margin-left: 10px;
+    }
+	</style>
+  <section class="rt_wrap content mCustomScrollbar">
+    <div class="rt_content new_page new_add_edit" id="verifyCheck">
+      <div class="page_title">
+        <h2 class="fl">设置<if condition="$type eq 1">服务商<else/>商户</if>信息</h2>
+        <a href="__APP__/Admin/admin_list.html" class="fr gradient-btn back-list"> <img src="/Public/admin/return-list.png" class="mCS_img_loaded">&nbsp;返回列表</a>
+      </div>
+      <section class="new-box">
+        <form method="post" class="form-x" action="{:U('/Admin/set_shop_info')}" enctype="multipart/form-data" onsubmit="return checked()">
+        	<input type="hidden" name="is_wx" value="{$info.is_wx}"/>            
+            <ul class="ulColumn2 row1 layui-form">           		
+            	<div class="txt-lead"><img src="http://wxsmj.wanjiejixie.com/Public/admin/wx-config.png" alt="" width="40"/>微信配置  
+            	<input type="checkbox" id='is_wx' <if condition="$info['is_wx'] eq 1">checked</if> lay-skin="switch" lay-text="开启|关闭"  lay-filter="wxconfig">
+            	
+            	</div>
+              <if condition="$type eq 1">
+              	  <li>
+	                <span class="item_name" style="width:150px;">服务商appid：</span>
+	                <input type="text" class="textbox textbox_225 required check-user wxConfigData" value="{$info.wx_appid}" data-valid="isNonEmpty" name="wx_appid" data-error="不能为空" placeholder="服务商appid" /> 
+	                <label class="focus valid "></label>
+	              </li>
+	              <li>
+	                <span class="item_name" style="width:150px;">服务商小程序appid：</span>
+	                <input type="text" class="textbox textbox_225 required check-user wxConfigData" value="{$info.wx_sappid}" data-valid="isNonEmpty" name="wx_sappid" data-error="不能为空" placeholder="服务商小程序appid" /> 
+	                <label class="focus valid "></label>
+	              </li>
+	              <li>
+	                <span class="item_name" style="width:150px;">服务商商户号：</span>
+	                <input type="text" class="textbox textbox_225 required check-user wxConfigData" value="{$info.mch_id}" data-valid="isNonEmpty" name="mch_id" data-error="不能为空" placeholder="服务商商户号" /> 
+	                <label class="focus valid "></label>
+	              </li>
+              </if>
+              <li>
+                <span class="item_name" style="width:150px;">商户名称：</span>
+                <input type="text" class="textbox textbox_225 required check-user wxConfigData" value="{$info.shop_name}" data-valid="isNonEmpty" name="shop_name" data-error="不能为空" placeholder="商户名称" /> 
+                <label class="focus valid "></label>
+              </li>
+              <li>
+                <span class="item_name" style="width:150px;">子商户商户号：</span>
+                <input type="text" class="textbox textbox_225 required check-user wxConfigData" value="{$info.sub_mch_id}" data-valid="isNonEmpty" name="sub_mch_id" data-error="不能为空" placeholder="sub_mch_id" /> 
+                <label class="focus valid "></label>
+              </li>
+              <li>
+                <span class="item_name" style="width:150px;">Key：</span>
+                <input type="text" class="textbox textbox_225 required wxConfigData" value="{$info.wx_key}" data-valid="isNonEmpty" name="wx_key" data-error="不能为空" placeholder="微信支付对应key"/>
+                <label class="focus valid "></label>
+              </li>
+              <if condition="$type eq 1"> 
+	              <li>
+	                  <span class="item_name" style="width:200px;">上传证书1（apiclient_cert）：</span>
+	                  <input type="text" class="textbox textbox_225 file-input" readonly="readonly" placeholder="请选择文件"/>                
+	                  <input type="file" name="apiclient_cert" style="display: none;"/>
+	                  <label class="focus valid "></label>
+	              </li>
+	              <li>
+	                  <span class="item_name" style="width:200px;">上传证书2（apiclient_key）：</span>
+	                  <input type="text" class="textbox textbox_225 file-input" readonly="readonly" placeholder="请选择文件" />  
+	                  <input type="file" name="apiclient_key" style="display: none;" />
+	                  <label class="focus valid "></label>
+	              </li>
+              </if>   
+            </ul>
+            <input type="hidden" name="is_ali" value="{$info.is_ali}"/>	
+            <ul class="ulColumn2 row1 layui-form">
+            	<div class="txt-lead"><img src="http://wxsmj.wanjiejixie.com/Public/admin/zfb-config.png" alt="" width="40"/>支付宝配置
+            	 <input type="checkbox" id='is_ali'<if condition="$info['is_ali'] eq 1">checked</if> lay-skin="switch" lay-text="开启|关闭"  lay-filter="zfbconfig">
+            	 
+            	 </div>
+            	<if condition="$type eq 1"> 
+            		  <li>
+		                <span class="item_name" style="width:150px;">第三方应用appid：</span>
+		                <input type="text" class="textbox textbox_225 required zfbConfigData" value="{$info.ali_appid}" data-valid="isNonEmpty" name="ali_appid" data-error="不能为空" placeholder="但第三方应用appid"/>                
+		                <label class="focus valid "></label>
+		              </li> 
+		              <li>
+		                <span class="item_name" style="width:150px;">商户私钥：</span>
+		                <textarea class="textbox textbox_225 required zfbConfigData" name="aprivate_key" data-error="不能为空">{$info.aprivate_key}</textarea>
+		                <label class="focus valid "></label>
+		              </li> 
+		              <li>
+		                <span class="item_name" style="width:150px;">支付宝公钥：</span>
+		                <textarea class="textbox textbox_225 required zfbConfigData" name="alipayrsa_public_key" data-error="不能为空">{$info.alipayrsa_public_key}</textarea>
+		                <label class="focus valid "></label>
+		              </li> 
+            	</if>
+              <li>                   
+                <span class="item_name" style="width:150px;">H5支付appid：</span>
+                <input type="text" class="textbox textbox_225 required zfbConfigData" value="{$info.h5_ali_appid}" data-valid="isNonEmpty" name="h5_ali_appid" data-error="不能为空" placeholder="H5支付appid"/>                
+                <label class="focus valid "></label>
+              </li>
+              <li>
+                <span class="item_name" style="width:150px;">H5支付商户私钥：</span>
+                <textarea class="textbox textbox_225 required zfbConfigData" name="h5_aprivate_key" data-error="不能为空">{$info.h5_aprivate_key}</textarea>
+                <label class="focus valid "></label>
+              </li> 
+              <li>
+                <span class="item_name" style="width:150px;">H5支付支付宝公钥：</span>
+                <textarea class="textbox textbox_225 required zfbConfigData" name="h5_alipayrsa_public_key" data-error="不能为空">{$info.h5_alipayrsa_public_key}</textarea>
+                <label class="focus valid "></label>
+              </li> 
+              <if condition="$type eq 1"> 
+              	  <li>
+	                <span class="item_name" style="width:150px;">授权app_auth_token：</span>
+	                <input type="text" class="textbox textbox_225 required zfbConfigData" value="{$info.app_auth_token}" data-valid="isNonEmpty" name="app_auth_token" readonly="readonly"/>                
+	                <label class="focus valid "></label>
+	              </li>              	
+              </if>
+            </ul>
+            <div class="clearfix"></div>
+            <div>            	
+                <input type="hidden" value="{$uid}" name="uid" />
+                <input type="hidden" value="{$type}" name="type" />
+                <input id="submit" type="submit" class="gradient-btn submitBtn" value="提交" />
+            </div>
+        </form>
+      </section>
+    </div>
+  </section>
+  <script>
+    layui.use('form', function(){
+      var form = layui.form,
+          wx = $("#is_wx").attr('checked')?true:false,
+          ali = $("#is_ali").attr('checked')?true:false;
+
+      form.on('switch(wxconfig)', function(data){
+        var elem = data.elem; //触发事件的元素
+        var checked = elem.checked; //元素的选择状态
+        if(!ali && !checked){
+        	layer.msg('两个支付不能同时关闭');
+          $(elem).prop("checked", checked ? "" : "checked"); //阻止状态切换
+          form.render('checkbox');
+        }       
+        wx=data.elem.checked;
+        if(!data.elem.checked){
+          $(".wxConfigData").attr('readonly','readonly');
+          $("input[name='is_wx']").val(0);
+        }else{
+          $(".wxConfigData").removeAttr('readonly');
+          $("input[name='is_wx']").val(1);
+        }
+      });  
+      form.on('switch(zfbconfig)', function(data){
+        var elem = data.elem; //触发事件的元素
+        var checked = elem.checked; //元素的选择状态
+        if(!wx && !checked){
+        	layer.msg('两个支付不能同时关闭');
+          $(elem).prop("checked", checked ? "" : "checked"); //阻止状态切换          
+          form.render('checkbox');
+        }
+        ali = data.elem.checked;
+        if(!data.elem.checked){
+          $(".zfbConfigData").attr('readonly','readonly');
+          $("input[name='is_ali']").val(0);
+        }else{
+          $(".zfbConfigData").removeAttr('readonly');
+          $("input[name='is_ali']").val(1);
+        }
+      });  
+
+    })
+  	
+  	$(".file-input").click(function(){
+  		$(this).siblings('input').click()
+  	})
+  	
+  	$("input[type='file']").change( function(e){
+    	var filename = $("input[type='file']").val().split('\\')
+    	$(this).siblings('input').val(filename[filename.length - 1])
+		})
+
+    function checked() {
+    	if($("input[name='type']").val()==1){
+    		if($("input[name='wx_appid']").val()==''){
+                layer.msg('服务商appid不能为空', {icon: 2});return false;
+            }
+    		if($("input[name='wx_sappid']").val()==''){
+                layer.msg('服务商小程序appid不能为空', {icon: 2});return false;
+            }
+    		if($("input[name='mch_id']").val()==''){
+                layer.msg('服务商商户号不能为空', {icon: 2});return false;
+            }
+        }
+    	if($("input[name='shop_name']").val()==''){
+            layer.msg('商户名称不能为空', {icon: 2});return false;
+        }
+    	if($("input[name='sub_mch_id']").val()==''){
+            layer.msg('微信商户号不能为空', {icon: 2});return false;
+        }
+    	if($("input[name='wx_key']").val()==''){
+            layer.msg('Key不能为空', {icon: 2});return false;
+        }
+    	if($("input[name='type']").val()==1){
+    		if($("input[name='ali_appid']").val()==''){
+                layer.msg('第三方应用appid不能为空', {icon: 2});return false;
+            }
+    		if($("textarea[name='aprivate_key']").val()==''){
+                layer.msg('商户私钥不能为空', {icon: 2});return false;
+            }
+    		if($("textarea[name='alipayrsa_public_key']").val()==''){
+                layer.msg('支付宝公钥不能为空', {icon: 2});return false;
+            }
+    	}
+    	if($("input[name='h5_ali_appid']").val()==''){
+            layer.msg('h5_ali_appid不能为空', {icon: 2});return false;
+        }
+		if($("textarea[name='h5_aprivate_key']").val()==''){
+            layer.msg('H5支付商户私钥不能为空', {icon: 2});return false;
+        }
+		if($("textarea[name='h5_alipayrsa_public_key']").val()==''){
+            layer.msg('H5支付支付宝公钥不能为空', {icon: 2});return false;
+        }
+    }
+
+    $(document).ready(function () {
+      //复选框样式
+      // $('input').iCheck({
+      //   checkboxClass: 'icheckbox_square-green',
+      //   radioClass: 'iradio_square-green',
+      //   increaseArea: '20%' // optional
+      // });
+    })
+  </script>
+</body>
+
+</html>

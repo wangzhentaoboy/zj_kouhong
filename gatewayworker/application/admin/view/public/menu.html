@@ -1,0 +1,26 @@
+<!--aside nav-->
+
+<aside class="lt_aside_nav content mCustomScrollbar">
+    <!-- <h2>
+        <a href="__APP__/device/fansChart.html">起始页 </a>
+    </h2> -->
+    <input type="hidden" name="ACTION_NAME" id="ACTION_NAME" value="{$ACTION_NAME}" />
+    <ul id="menu" class="menu">
+
+            {volist name="rules1" id="v"}
+            <li>
+                <a class="nav-item tpl-left-nav-link-list {if condition="in_array($ACTION_NAME,$v['menu']) "}active-menu{/if}"><span></span>
+                    <img src="http://wxsmj.wanjiejixie.com/Public/admin/img/menu-normal-icon{$key+1}.png" class="menu-normal">
+                    <img src="http://wxsmj.wanjiejixie.com/Public/admin/img/menu-selected-icon{$key+1}.png" class="menu-selected">{$v.title}</a>
+                <div class="tpl-left-nav-sub-menu {$v.name}" {if condition="in_array($ACTION_NAME,$v['menu']) "} {else/} style="display:none;" {/if} >
+                {volist name="rules2" id='vv'}
+		                {if condition="$vv['pid'] eq $v['id']"}
+		                    <a href="/index.php/admin/{$vv['name']}" id="{$vv.action}">{$vv.title}</a>
+		               {/if}
+	                {/volist}
+                </div>
+            </li>
+        {/volist}
+    </ul>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/menu.js"></script>
+</aside>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <title>煮面鲜生机器人后台管理系统</title>
+    <meta name="author" content="DeathGhost"/>
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/skins/icheck.css">
+    <!--[if lt IE 9]>
+        <script src="__ROOT__/Public/js/html5.js"></script>
+    <![endif]-->
+    <script src="__ROOT__/Public/js/jquery.js"></script>
+    <script src="__ROOT__/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="__ROOT__/Public/js/icheck.js"></script>
+    <script src="__ROOT__/Public/js/jquery.verify.js"></script>
+    <script src="__ROOT__/Public/layer/mobile/need/layer.css"></script>
+    <script src="__ROOT__/Public/layer/layer.js"></script>    
+    <script src="__ROOT__/Public/laydate/laydate.js"></script>
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/admin/add-style.css">
+
+</head>
+<body>
+<!--header-->
+<include file="Public:header"/>
+<!--aside nav-->
+<!--aside nav-->
+<include file="Public:menu"/>
+
+
+<section class="rt_wrap content mCustomScrollbar">
+    <div class="rt_content new_page new_add_edit" id="verifyCheck">
+        <div class="page_title">
+            <h2 class="fl">发放优惠券</h2>
+            <a href="__APP__/User/user_list.html" class="fr gradient-btn add-icon"> <img src="__ROOT__/Public/admin/return-list.png">&nbsp;返回列表</a>
+        </div>
+        <div class="new-box">
+            <form method="post" class="form-x" action="" onsubmit="return checked()">
+            <section>
+                <ul class="ulColumn2 row1">
+                     <li class="li_lead">
+                        <img src="__ROOT__/Public/admin/tiping.png">&nbsp;&nbsp;发放用户：{$user.nickname}（UID：{$user.id}）                        
+                    </li>
+                    <li id="device" class="new_checkbox">
+                        <span class="item_name">适用门店范围：</span>
+                        <input type="text" class="textbox textbox_225 required" data-valid="isNonEmpty" name="deviceid_name"
+                               data-error="不能为空" placeholder="请选择适用门店" id="select_device" value="" uids="{$arr.deviceid}" autocomplete="off" />      
+                        <input type="hidden" name="deviceid" id="select_device_id">   
+
+                        <!-- <label class="focus valid "></label> -->
+                        <!-- <div> -->
+                            <!-- <if condition="($adminId === '1')">
+                                <input type="checkbox" name="deviceid[]" value="0" id="allStore">
+                                <label for="allStore" id="all"> 全部门店</label>
+                            </if>
+                            <volist name="device" id="a">
+                                <input type="checkbox" name="deviceid[]" value="{$a.deviceid}" id="{$a.deviceid}">
+                                <label for="{$a.deviceid}">{$a.name}</label>
+                            </volist> -->
+                        <!-- </div> -->
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">优惠券名称：</span>
+                        <input type="text" class="textbox textbox_225 required" data-valid="isNonEmpty" name="name"
+                               data-error="不能为空" placeholder="优惠券名称"
+                        />
+                        <label class="focus valid "></label>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">优惠金额：</span>
+                        <input type="text" class="textbox textbox_225 required money" name="price" id="price"
+                               placeholder="优惠金额" data-valid="isNonEmpty||isFloat"
+                               data-error="不能为空||请输入金额"/>
+                        <label class="focus valid "></label>
+
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">满减使用：</span>
+                        <input type="text" class="textbox textbox_225 required" name="condition" id="condition"
+                               placeholder="满减使用" data-valid="isNonEmpty||isFloat"
+                               data-error="不能为空||请输入金额"/>
+                        <label class="focus valid "></label>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">开始时间：</span>
+                        <input type="text" class="textbox textbox_225 required orderStartTime" name="starttime" placeholder="输入起始时间"
+                               aria-required="true" onClick=""
+                               data-valid="isNonEmpty" data-error="不能为空">
+                        <label class="focus valid "></label>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">结束时间：</span>
+                        <input type="text" class="textbox textbox_225 required orderEndTime" name="endtime" placeholder="输入结束时间"
+                               aria-required="true" onClick=""
+                               data-valid="isNonEmpty" data-error="不能为空">
+                        <label class="focus valid "></label>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;"></span>
+                        <input type="hidden" name="openid" value="{$user.openid}"/>
+                        <input id="submit" type="submit" class="submitBtn" value="提交"/>
+                    </li>
+                </ul>
+            </section>
+        </form>
+        </div>
+    </div>
+</section>
+<script>
+
+    lay('.orderStartTime').each(function () {
+        laydate.render({
+            elem: this
+            , trigger: 'click', max: 120,min:0
+        });
+    });
+    lay('.orderEndTime').each(function () {
+        laydate.render({
+            elem: this
+            , trigger: 'click', max: 120,min:0
+        });
+    });
+
+    function checked() {
+        $("#select_device_id").val($("#select_device").attr('uids'))
+        if (!verifyCheck._click()) return false;
+        if (!$("#select_device_id").val()) {
+            layer.msg('请选择适用门店！');
+            return false;
+        }
+    }
+
+    $(document).ready(function () {
+        //复选框样式
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+            increaseArea: '20%' // optional
+        });
+        $("input[name='deviceid[]']").iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+            increaseArea: '20%'
+        });
+        //全选的添加
+        $('#allStore').on('ifChecked', function (event) {
+            $("input[name='deviceid[]']").iCheck('check');
+        });
+        //全选的去除
+        $('#allStore').on('ifUnchecked', function (event) {
+            $("input[name='deviceid[]']").iCheck('uncheck');
+        });
+
+        $(".content").delegate("a[href='top']", "click", function (e) {
+            e.preventDefault();
+            $(".content").mCustomScrollbar("scrollTo", $(this).attr("href"));
+        });
+    })
+
+    $("#select_device").click(function(){
+        var checktype = 'checkbox';
+        layer.open({
+            title: "",
+            type: 2,
+            area: ['800px', '648px'],
+            fix: true, //不固定
+            maxmin: false, //可缩放
+            content: '__APP__/Api/device_list_select?checktype=' + checktype +'&id=' + $(this).attr('id') + '&checkid=' + $(this).attr('uids') +'&checkname='+$(this).val()
+        });
+    })
+
+
+</script>
+</body>
+
+</html>

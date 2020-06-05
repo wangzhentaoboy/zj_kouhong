@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>煮面鲜生机器人后台管理系统</title>
+    <meta name="author" content="DeathGhost" />
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/css/style.css">
+
+    <script src="__ROOT__/Public/js/jquery.js"></script>
+    <script src="__ROOT__/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="__ROOT__/Public/js/jquery.verify.js"></script>
+    <script src="__ROOT__/Public/layer/mobile/need/layer.css"></script>
+    <script src="__ROOT__/Public/layer/layer.js"></script>
+    <script src="__ROOT__/Public/My97DatePicker/WdatePicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/admin/add-style.css">
+    <style type="text/css">
+        .ulColumn2{
+            height: 71.5vh;
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+<include file="Public:header" />
+<include file="Public:menu" />
+<section class="rt_wrap content mCustomScrollbar">
+    <div class="rt_content new_page new_add_edit" id="verifyCheck">
+        <div class="page_title">
+            <h2 class="fl">系统设置</h2>
+        </div>
+        <section class="new-box">
+            <ul class="ulColumn2 row1">
+                <foreach name="set_list" item="v">
+                    <li>
+                        <span class="item_name" style="width:20%;">{$v.name}：</span>
+                        <div class="textbox_295" style="display:inline-flex;width:70%;">
+                            <input type="text" class="textbox required"  value="{$v.value}" id="{$v.id}" style="width: 50%;"/><span style="width: 5px;"></span>                            
+                        </div>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:20%;"></span>
+                        <button type="button" onclick="sys_set({$v.id});" class="gradient-btn submitBtn">确认</button>
+                    </li>
+                </foreach>
+            </ul>
+        </section>
+    </div>
+</section>
+<script>
+    function sys_set(vid){
+        var id=vid;
+        var value=$("#"+id).val();
+        $.ajax({
+            type:"post",
+            url:"{:U('/auth/set_sys')}",
+            data:{id:id,value:value},
+            success:function(msg){
+                if(msg==1){
+                    alert("设置成功");
+                }else{
+                    alert("设置失败");
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

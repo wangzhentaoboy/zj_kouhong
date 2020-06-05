@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <title>煮面鲜生机器人后台管理系统</title>
+    <meta name="author" content="DeathGhost"/>
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/css/style.css">
+  
+    <!--[if lt IE 9]>
+    <script src="__ROOT__/Public/js/html5.js"></script>
+    <![endif]-->
+    <script src="__ROOT__/Public/js/jquery.js"></script>
+    <script src="__ROOT__/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="__ROOT__/Public/layer/mobile/need/layer.css"></script>
+    <script src="__ROOT__/Public/layer/layer.js"></script>
+    <script src="__ROOT__/Public/laydate/laydate.js"></script>
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/admin/add-style.css">
+    <style>
+        .active {
+            background-color: #06c1ae;
+        }
+    </style>
+</head>
+<body>
+<!--header-->
+<include file="Public:header"/>
+<!--aside nav-->
+<include file="Public:menu"/>
+<section class="rt_wrap content mCustomScrollbar">
+    <div class="rt_content new_page new_list">
+        <div class="page_title">
+            <h2 class="fl">提现记录列表</h2>
+            <div class="fr search-cnt">
+                <form method="get" class="form-x" action="">
+                    <input type="text" class="textbox input-box bg-border-radius" name="nickname" value="{$nickname}"
+                               placeholder="用户uid或者用户昵称"/>
+                    <input type="text" class="textbox bg-border-radius input-box orderStartTime w_130" name="startTime" placeholder="提现起始时间"
+                           aria-required="true" value="{$startTime}">
+                    <input type="text" class="textbox bg-border-radius input-box orderEndTime w_130" value="{$endTime}" name="endTime" placeholder="提现结束时间"
+                           aria-required="true">
+                    <input type="submit" id="select" value="查询" class="gradient-btn seatch-btn half_80_w"/>
+                </form>
+            </div>
+        </div>
+        
+        <div class="new-box">
+            <table class="table">
+                <tr class="lead">
+                    <th>ID</th>
+                    <th>用户昵称</th>
+                    <th>用户身份</th>
+                    <th>提现金额</th>
+                    <th>提现时间</th>
+                </tr>
+                <volist name="arr" id="a">
+                    <tr>
+                        <td class="center">{$a.id}</td>
+                        <td class="center">{$a.nickname}（UID：{$a.uid}）</td>
+                        <td class="center">
+                            <if condition="$a.role eq 18"><span>管理员</span>
+                                <elseif condition="$a.role eq 21"/>
+                                <span >合伙人</span>
+                                <elseif condition="$a.role eq 26"/>
+
+                                <span >运维人员</span>
+                                <elseif condition="$a.role eq 6"/>
+                                <span>超级管理员</span>
+                                <elseif condition="$a.role eq 27"/>
+                                <span >促销人员</span>
+                            </if>
+                        </td>
+                        <td class="center">
+                            <strong class="rmb_icon">{$a.money}</strong>
+                        </td>
+                        <td class="center">{$a.add_time|date="Y-m-d H:i:s",###}</td>
+
+                    </tr>
+                </volist>
+            </table>
+            <aside class="paging">
+                {$page}
+            </aside>
+        </div>
+        
+    </div>
+</section>
+</body>
+<script type="text/javascript">
+    lay('.orderStartTime').each(function () {
+        laydate.render({
+            elem: this
+            , trigger: 'click', max: 0
+        });
+    });
+    lay('.orderEndTime').each(function () {
+        laydate.render({
+            elem: this
+            ,value:new Date()
+            , trigger: 'click', max: 0
+        });
+    });
+</script>
+</html>

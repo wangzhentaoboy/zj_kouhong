@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>美女大作战后台管理系统</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="http://wxsmj.wanjiejixie.com/Public/css/bootstrap.min.css?time={:time()}">
+    <link rel="stylesheet" href="http://wxsmj.wanjiejixie.com/Public/css/form-elements.css?time={:time()}">
+    <link rel="stylesheet" href="http://wxsmj.wanjiejixie.com/Public/css/login-style.css?time={:time()}">
+    <link href="http://wxsmj.wanjiejixie.com/Public/css/toastr.min.css?time={:time()}" rel="stylesheet">
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicon and touch icons -->
+    <style type="text/css">
+        
+        
+    </style>
+
+</head>
+<style>
+    body {
+        background: url('http://wxsmj.wanjiejixie.com/Public/index/images/login-bg.png') #ffe200;
+        height: 100vh;
+        background-repeat: no-repeat;
+        background-position: center bottom; 
+        display: flex;flex-direction: column;justify-content: flex-end;
+        padding-bottom: 10vh;
+        box-sizing: border-box;
+    }    
+
+</style>
+
+<body>
+
+
+<!-- Top content -->
+<div class="top-content">
+
+    <div class="inner-bg">
+        <div class="container">           
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                     <div class="form-top">
+                            <img src="http://wxsmj.wanjiejixie.com/Public/index/images/login-logo.png" alt="">
+                        </div>
+                    <div class="form-box">   
+                        <div class="lead">
+                            后台登录
+                        </div>                    
+                        <div class="form-bottom">
+                            <form method="post" class="login-form" id="form1">
+                                <div class="form-group">
+                                    <label class="sr-only" for="form-username">用户名</label>
+                                    <input type="text" name="account" placeholder="请输入用户名"
+                                           class="form-username form-control" id="account" readonly="readonly
+                    " onfocus="this.removeAttribute('readonly')" autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="form-password">密码</label>
+                                    <input type="password" name="pwd" placeholder="请输入密码"
+                                           class="form-password form-control" id="pwd" readonly="readonly
+                    " onfocus="this.removeAttribute('readonly')" autocomplete="off">
+                                </div>
+                                <button type="button" class="btn" id="submit_btn">登录</button>
+                            </form>
+                        </div>
+                        <div class="social-login-buttons">
+                            <a class="" href="http://wxsmj.wanjiejixie.com/admin.php/Login/scanLofin">
+                                <img src="__ROOT__/Public/index/images/login-wx.png" alt="" width="50px">
+                            </a>
+                        </div>                        
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Javascript -->
+<script src="http://wxsmj.wanjiejixie.com/Public/js/jquery-1.11.1.min.js"></script>
+<script src="http://wxsmj.wanjiejixie.com/Public/js/bootstrap.min.js"></script>
+<script src="http://wxsmj.wanjiejixie.com/Public/js/rsa/js/hlz_rsa.js"></script>
+<script src="http://wxsmj.wanjiejixie.com/Public/js/toastr.min.js"></script>
+
+<script>
+    jQuery(document).ready(function () {
+        toastr.options.positionClass = 'toast-top-center';
+        $('.login-form input[type="text"], .login-form input[type="password"], .login-form textarea').on('focus', function () {
+            $(this).removeClass('input-error');
+        });
+
+        $('.login-form').on('submit', function (e) {
+            $(this).find('input[type="text"], input[type="password"], textarea').each(function () {
+                if ($(this).val() == "") {
+                    e.preventDefault();
+                    $(this).addClass('input-error');
+                }
+                else {
+                    $(this).removeClass('input-error');
+                }
+            });
+        });
+        $("body").keydown(function (e) {
+            var curKey = e.which;
+            if (curKey == 13) {
+                $("#submit_btn").click();
+                return false;
+            }
+        });
+        //测试提交，对接程序删除即可
+        $("#submit_btn").click(function () {
+            var username = $("#account").val();
+            var rsa_username = rsa_encode(username); // 经RSA加密后的数据
+            // alert(rsa_username);
+            var pwd = $("#pwd").val();
+            var rsa_pwd = rsa_encode(pwd); // 经RSA加密后的数据
+            $.ajax({
+                url: "/index.php/admin/Login/check",
+                data: {"account": rsa_username, "pwd": rsa_pwd},
+                dataType: 'json',
+                type: 'post',
+                success: function (data) {
+                    if (data.code === 200) {
+                        toastr.success("登录成功!");
+                        setTimeout(function () {
+                            location.href = "/index.php/admin/User/user_list";
+                        }, 2000)
+                    } else {
+                        toastr.error("账号密码错误!");
+                    }
+                }
+            });
+        });
+
+    });
+</script>
+<script type="text/javascript">
+//    window.onload = function () {
+//        //屏蔽键盘事件
+//        document.onkeydown = function () {
+//            var e = window.event || arguments[0];
+//            //F12
+//            if (e.keyCode == 123) {
+//                return false;
+//                //Ctrl+Shift+I
+//            } else if ((e.ctrlKey) && (e.shiftKey) && (e.keyCode == 73)) {
+//                return false;
+//                //Shift+F10 == 121)) {
+//                return false;
+//                //Ctrl+U
+//            } else if ((e.ctrlKey) && (e.keyCode == 85)) {
+//                return false;
+//            }
+//        };
+//        //屏蔽鼠标右键
+//        document.oncontextmenu = function () {
+//            return false;
+//        }
+//    }
+
+</script>
+</body>
+
+</html>

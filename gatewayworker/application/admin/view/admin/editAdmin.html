@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <title>{$title}</title>
+    <meta name="author" content="DeathGhost"/>
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/css/style.css">
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/skins/icheck.css">
+    <link href="http://wxsmj.wanjiejixie.com/Public/layer/mobile/need/layer.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/html5.js"></script>
+    <![endif]-->
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/My97DatePicker/WdatePicker.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/icheck.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.verify.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/layer/layer.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/admin/add-style.css">
+
+</head>
+
+<body>
+<!--header-->
+<include file="Public:header"/>
+<!--aside nav-->
+<!--aside nav-->
+<include file="Public:menu"/>
+
+
+<section class="rt_wrap content mCustomScrollbar">
+    <div class="rt_content new_page new_add_edit" id="verifyCheck">
+        <div class="page_title">
+            <h2 class="fl">编辑管理员</h2>
+            <a href="__APP__/Admin/admin_list.html" class="fr gradient-btn back-list"> <img src="/Public/admin/return-list.png" class="mCS_img_loaded">&nbsp;返回列表</a>
+        </div>
+        <div class="new-box">
+            <form method="post" class="form-x" action="{:U('/Admin/editAdmin')}" onsubmit="return checked()">
+                <section>
+                    <input type="hidden" name="id" id="id" value="{$arr.id}"/>
+                    <ul class="ulColumn2 row1">
+                        <li>
+                            <span class="item_name" style="width:120px;">管理员账号：</span>
+                            <input type="text" class="textbox textbox_225 required" name="username" id="username"
+                                   value="{$arr.username}" data-valid="isNonEmpty"
+                                   data-error="不能为空"/>
+                            <label class="focus valid "></label>
+                        </li>
+                        <!--<li>-->
+                            <!--<span class="item_name" style="width:120px; ">类型：</span>-->
+                            <!--<foreach name="group" item="v">-->
+                                <!--<input type="radio" name="type" value="{$v.id}" id="type{$v.id}"> {$v.title}-->
+                            <!--</foreach>-->
+                        <!--</li>-->
+                        <li>
+                            <span class="item_name" style="width:120px;"></span>
+                            <input id="submit" type="submit" class="gradient-btn submitBtn" value="提交"/>
+                        </li>
+                    </ul>
+                </section>
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+
+    function checked() {
+        if (!verifyCheck._click()) return false;
+    }
+    $(window).load(function () {
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+            increaseArea: '20%' // optional
+        });
+
+        var type = '{$arr.type}'
+        $('#type' + type).iCheck('check');
+
+        //全选的添加
+        $('#allStore').on('ifChecked', function (event) {
+            $("input[name='rules[]']").iCheck('check');
+        });
+
+        //全选的去除
+        $('#allStore').on('ifUnchecked', function (event) {
+            $("input[name='deviceid[]']").iCheck('uncheck');
+        });
+
+        $("a[rel='load-content']").click(function (e) {
+            e.preventDefault();
+            var url = $(this).attr("href");
+            $.get(url, function (data) {
+                $(".content .mCSB_container").append(data); //load new content inside .mCSB_container
+                //scroll-to appended content
+                $(".content").mCustomScrollbar("scrollTo", "h2:last");
+            });
+        });
+
+        $(".content").delegate("a[href='top']", "click", function (e) {
+            e.preventDefault();
+            $(".content").mCustomScrollbar("scrollTo", $(this).attr("href"));
+        });
+        $('#menu dd a').each(function () {
+            var length = String(window.location).lastIndexOf('/');
+            //console.log($($(this))[0].href.substring(0,length));
+            // console.log(length);
+            var url = String(window.location).substring(0, length);
+            // console.log(url);
+            if ($($(this))[0].href.substring(0, length) == url) {
+                $(this).addClass("active");
+                $(this).nextAll().removeClass('active');
+            }
+        });
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>chatroom</title>
+    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"/></script>
+
+    <script type="text/javascript">
+    // 打开一个 web socket
+    var ws = new WebSocket("ws://127.0.0.1:8282");
+
+    ws.onopen = function ()
+    {
+        console.log('上线');
+    };
+    ws.onerror=function(e){
+        console.log(e);
+    }
+    ws.onclose=function(e){
+        console.log('下线');
+    }
+    ws.onmessage = function (evt)
+    {
+        var received_msg = evt.data;
+        alert("数据已接收..." + received_msg);
+        if(isJsonString(received_msg)){
+            var jmsg = JSON.parse(received_msg);
+        }else{
+            var jmsg = received_msg;
+        }
+
+        console.log(jmsg);
+        // console.log();
+       /* if (jmsg.from_uid > 0) {
+
+            var t_msg = '<li>' + jmsg.from_uid + ' 说：' + jmsg.msg + '</li>';
+
+            $("#message").append(t_msg);
+        }
+
+        if ('client_id' in jmsg && jmsg.client_id.length != 0) {
+            $.post("{:url('bind')}", {client_id: jmsg.client_id}, function (data) {
+                // console.log(data);
+            });
+        } */
+    }
+
+    function isJsonString(str) {
+        try {
+            if (typeof JSON.parse(str) == "object") {
+                return true;
+            }
+        } catch (e) {
+        }
+        return false;
+    }
+    </script>
+</head>
+<body>
+<ul id="message">
+
+</ul>
+
+<div>
+    <input name="uid" value="1" >
+    <input name="msg" value="" size="50">
+    <button type="button" id="send" >发送</button>
+</div>
+
+<script>
+    $(function () {
+        $("#send").click(function () {
+            var uid = $('input[name="uid"]').val();
+            var msg = $('input[name="msg"]').val();
+            $.post("{:url('/index.php/index/index/message')}", {uid: uid, msg: msg}, function (data) {
+                $('input[name="msg"]').val('');
+            });
+
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <title>{$title}</title>
+    <meta name="author" content="DeathGhost"/>
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/css/style.css">
+    <link href="http://wxsmj.wanjiejixie.com/Public/layer/mobile/need/layer.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/html5.js"></script>
+    <![endif]-->
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/jquery.verify.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/layer/layer.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/js/imgUp.js"></script>
+    <script src="http://wxsmj.wanjiejixie.com/Public/laydate/laydate.js"></script>    
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="http://wxsmj.wanjiejixie.com/Public/admin/add-style.css">  
+    <style type="text/css">
+        .layui-laydate-list>li{
+            width: 50%;
+        }
+        .layui-laydate-list>li:last-child{
+            display: none;
+        }
+        .layui-form-select{
+            width: 95%;
+            max-width: 300px;
+        }
+        .layui-form-select .layui-input{
+            height: 50px;
+            background-color: #fefefe;
+            border-radius: 2px;
+            border: solid 2px #ebebeb;
+        }
+        .layui-form-select .layui-input:hover,
+        .layui-form-select .layui-input:focus{
+            border-color: #ffe200 !important;
+        }
+        .layui-form-select .layui-edge{
+            right: 5%;
+        }
+    </style>   
+</head>
+
+<body>
+<!--header-->
+{include file="public/header" /}
+<!--aside nav-->
+<!--aside nav-->
+<!--<include file="Public:menu" />-->
+{include file="public/menu" /}
+<section class="rt_wrap content mCustomScrollbar">
+    <div class="rt_content new_page new_add_edit" id="verifyCheck">
+        <div class="page_title">
+            <h2 class="fl">修改概率</h2>
+            <a href="/index.php/admin/User/rate" class="fr gradient-btn back-list"> <img src="http://wxsmj.wanjiejixie.com/Public/admin/return-list.png">&nbsp;返回列表</a>
+        </div>
+        <!-- <form method="post" class="form-x"  enctype="multipart/form-data" name="basicForm" novalidate="novalidate" onsubmit="return checked()"> -->
+        <section id="basicForm" class="new-box">
+            <ul class="ulColumn2">
+                <li>
+                    <span class="item_name" style="width:140px;">名称：</span>
+                    <input type="" class="textbox textbox_295 required" name="name" id="name"
+                           placeholder="名称" data-valid="isNonEmpty"
+                           data-error="不能为空||请输入正确格式" value="{$rate['name']}"/>
+                    <label class="focus valid "></label>
+                </li>
+                <li>
+                    <span class="item_name" style="width:140px;">概率：</span>
+                    <input type="" class="textbox textbox_295 required" name="code" id="code"
+                           placeholder="概率" data-valid="isNonEmpty"
+                           data-error="不能为空||请输入正确格式" value="{$rate['rate']}"/>
+                    <label class="focus valid "></label>
+                </li>
+
+                <input type="hidden" value="{$rate['id']}" name="id" id="id"/>
+            </ul>
+            <input id="submit" type="submit" class="shopHistory" value="提交"/>
+        </section>
+        <!-- </form> -->
+    </div>
+</section>
+
+
+<script src="http://wxsmj.wanjiejixie.com/Public/layui/layui.all.js" type="text/javascript"></script>
+<style type="text/css">
+
+</style>
+<script>
+
+
+    $(window).load(function () {
+
+        //  提交
+        $(".shopHistory").click(function () {
+
+            // 上传的流存储进要传递数据当中
+            // var fm = document.getElementById('basicForm');
+            var test = new FormData();
+
+            test.append("name", $("#name").val());
+            test.append("rate", $("#code").val());
+            test.append("id", $("#id").val());
+            
+            $.ajax({
+                url: "/index.php/admin/User/rate",
+                type: "post",
+                data: test,
+                processData: false,
+                contentType: false,
+                async: false,
+                dataType:"json",
+                success: function (res) {
+
+                    if (res.code == 200) {
+                        layer.msg('添加成功！', {icon: 1}, function () {
+                            window.location.href = "/index.php/admin/User/rate"
+                        });
+                    } else {
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }
+            });
+        })
+    });
+</script>
+
+</body>
+
+</html>
